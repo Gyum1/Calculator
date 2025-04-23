@@ -1,76 +1,57 @@
 package example;
 
-import java.util.Scanner;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Calculator {
-    public static void main(String[] args) {
+    // 연산 결과를 저장하는 컬렉션 타입 필드 (캡슐화 적용)
+    private List<String> history;
 
-        Scanner sc = new Scanner(System.in);
-
-        while(true) {
-            double result = 0;
-            System.out.println("-------------------------");
-            System.out.print("1.계산기 실행\n2.종료\n:");
-            int select = sc.nextInt();
-            if(select == 2) {
-                System.out.println("프로그램을 종료합니다.");
-                break;
-            }
-
-            System.out.print("사칙연산 기호를 입력하세요. : ");
-            char sign = sc.next().charAt(0);
-
-
-            System.out.print("첫 번째 숫자를 입력해주세요.(양의 정수만 입력) : ");
-            double num1 = sc.nextInt();
-            if(num1 < 0) {
-                System.out.println("양의 정수만 입력 가능합니다.");
-                System.out.print("첫 번째 숫자를 입력해주세요.(양의 정수만 입력) : ");
-                num1 = sc.nextInt();
-            }
-
-            System.out.print("두 번째 숫자를 입력해주세요.(양의 정수만 입력) : ");
-            double num2 = sc.nextInt();
-            if(num2 < 0){
-                System.out.println("양의 정수만 입력 가능합니다.");
-                System.out.print("두 번째 숫자를 입력해주세요.(양의 정수만 입력) : ");
-                num2 = sc.nextInt();
-            } else if(sign == '/') {
-                if(num2 == 0) {
-                    System.out.println("나눗셈 연산에서 분모(두번째 정수)에 0이 입력될 수 없습니다.");
-                    System.out.print("두 번째 숫자를 입력해주세요.(양의 정수만 입력) : ");
-                    num2 = sc.nextInt();
-                }
-            }
-
-
-
-
-            switch(sign) {
-
-                case '+':
-                    result = num1 + num2;
-                    System.out.println((int)num1 + " + " + (int)num2 + " = " + (int)result);
-                    break;
-                case '-':
-                    result = num1 - num2;
-                    System.out.println((int)num1 + " - " + (int)num2 + " = " + (int)result);
-                    break;
-                case '*':
-                    result = num1 * num2;
-                    System.out.println((int)num1 + " * " + (int)num2 + " = " + (int)result);
-                    break;
-                case '/':
-                    result = num1 / num2;
-                    System.out.println((int)num1 + " / " + (int)num2 + " = " + result);
-                    break;
-                default:
-                    System.out.println("+, -, *, / 외에는 입력이 불가능합니다.");
-            }
-
-
-
-
-        }
+    // 생성자: history 리스트 초기화
+    public Calculator() {
+        this.history = new ArrayList<>();
     }
+
+    int calculate(int num1, int num2, char operator) {
+        int result;
+
+        switch (operator) {
+            case '+':
+                result = num1 + num2;
+                break;
+            case '-':
+                result = num1 - num2;
+                break;
+            case '*':
+                result = num1 * num2;
+                break;
+            case '/':
+                if (num2 == 0) {
+                    throw new ArithmeticException("0으로 나눌 수 없습니다!");
+                }
+                result = num1 / num2;
+                break;
+            default:
+                throw new IllegalArgumentException("올바른 연산 기호를 입력해주세요!");
+                // throw new ...올바른 기호 입력하라고 만들기
+        }
+
+        // ⭐ 연산 과정과 결과를 문자열로 저장
+        String operation = num1 + " " + operator + " " + num2 + " = " + result;
+        history.add(operation); // 이제 history에는 문자열이 들어감
+        return result;
+
+
+    }
+    // 연산 기호 리스트에 저장 메소드 (ex. addToHistory())
+
+    public List<String> getHistory() {
+        return history;
+    }
+
+    // 연산 기록 반환 (getter 메서드)
+
+
+
 }
